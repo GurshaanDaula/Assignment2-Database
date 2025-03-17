@@ -4,7 +4,6 @@ const session = require('express-session');
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
 const app = express();
-const dotenv = require('dotenv');
 
 // Load environment variables from .env file
 dotenv.config();

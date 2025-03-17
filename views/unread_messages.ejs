@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unread Messages</title>
+</head>
+
+<body>
+    <h1>Unread Messages</h1>
+    <ul>
+        <% messages.forEach((message)=> { %>
+            <li>
+                <strong>Message:</strong>
+                <%= message.text %><br>
+                    <strong>Sent At:</strong>
+                    <%= message.sent_datetime %><br>
+                        <strong>Unread Count:</strong>
+                        <%= message.unread_count %><br>
+                            <form action="/message/<%= message.message_id %>/emoji" method="POST">
+                                <label for="emoji_id">React with:</label>
+                                <select name="emoji_id">
+                                    <option value="1">Thumbs Up</option>
+                                    <option value="2">100%</option>
+                                    <option value="3">Happy Face</option>
+                                </select>
+                                <button type="submit">React</button>
+                            </form>
+            </li>
+            <% }) %>
+    </ul>
+    <a href="/">Go to Home</a>
+</body>
+
+</html>

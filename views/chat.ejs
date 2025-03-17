@@ -1,0 +1,15 @@
+<h2>Chat Room</h2>
+
+<div id="messages">
+    <% messages.forEach(msg=> { %>
+        <p><strong>
+                <%= msg.username %>
+            </strong>: <%= msg.text %> <small>(<%= msg.sent_datetime %>)</small></p>
+        <% }); %>
+</div>
+
+<!-- Message input -->
+<form action="/send-message/<%= room_id %>" method="POST">
+    <textarea name="message" required></textarea>
+    <button type="submit">Send</button>
+</form>

@@ -1,0 +1,12 @@
+<h2>Your Groups</h2>
+<ul>
+    <% groups.forEach(group=> { %>
+        <li><a href="/groups/<%= group.room_id %>/messages">
+                <%= group.name %>
+            </a></li>
+        <% }) %>
+</ul>
+<form action="/groups/create" method="POST">
+    <input type="text" name="groupName" placeholder="New Group Name" required>
+    <button type="submit">Create Group</button>
+</form>

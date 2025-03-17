@@ -5,7 +5,6 @@ const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
 const app = express();
 
-const mysql = require('mysql2');
 
 const connection = mysql.createConnection({
     host: process.env.DB_HOST,       // Your DB host (Aiven's MySQL host)

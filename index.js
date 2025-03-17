@@ -13,9 +13,7 @@ const connection = mysql.createConnection({
     password: process.env.DB_PASSWORD, // Your DB password
     database: process.env.DB_NAME,   // Your DB name
     port: process.env.DB_PORT,       // Port from Aiven (e.g., 12515)
-    ssl: {
-        rejectUnauthorized: false,  // Allow self-signed certificates
-    }
+    ssl: false
 });
 
 connection.connect(err => {

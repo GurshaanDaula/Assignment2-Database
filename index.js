@@ -117,16 +117,23 @@ app.get('/signup', (req, res) => {
 // User Sign Up Post Route
 app.post('/signup', (req, res) => {
   const { email, username, password } = req.body;
-  
+
+  // Password validation regex
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{10,}$/;
+
+  if (!passwordRegex.test(password)) {
+    return res.render('signup', { error: 'Password must be at least 10 characters long and include an uppercase letter, a lowercase letter, a number, and a special character.' });
+  }
+
   bcrypt.hash(password, 10, (err, hashedPassword) => {
     if (err) {
-      console.error('Error hashing password:', err);  // Log the error if password hashing fails
+      console.error('Error hashing password:', err);
       return res.status(500).json({ error: 'Error hashing password' });
     }
 
     db.query('SELECT * FROM user WHERE email = ?', [email], (err, result) => {
       if (err) {
-        console.error('Error checking if email exists:', err);  // Log if there is an error checking email
+        console.error('Error checking if email exists:', err);
         return res.status(500).json({ error: 'Error checking if email exists', details: err });
       }
 
@@ -134,11 +141,11 @@ app.post('/signup', (req, res) => {
         return res.render('signup', { error: 'Email already in use' });
       }
 
-      // If email is unique, proceed with inserting the new user
+      // If email is unique, insert the new user
       db.query('INSERT INTO user (email, username, password_hash) VALUES (?, ?, ?)', 
         [email, username, hashedPassword], (err, result) => {
           if (err) {
-            console.error('Database error during signup:', err);  // Log the database error if insert fails
+            console.error('Database error during signup:', err);
             return res.status(500).json({ error: 'Database error during signup', details: err });
           }
 
@@ -147,6 +154,7 @@ app.post('/signup', (req, res) => {
     });
   });
 });
+
 
 
 // Log out route (destroy session)

@@ -1,6 +1,9 @@
 <h1>Welcome, <%= username %>!</h1>
 
 <h2>All Chat Groups</h2>
+<form action="/logout" method="GET">
+    <button type="submit" class="btn">Logout</button>
+</form>
 <% if (chatGroups && chatGroups.length> 0) { %>
     <ul>
         <% chatGroups.forEach(group=> { %>

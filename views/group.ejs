@@ -1,4 +1,7 @@
 <h2>Your Groups</h2>
+<form action="/logout" method="GET">
+    <button type="submit" class="btn">Logout</button>
+</form>
 <ul>
     <% groups.forEach(group=> { %>
         <li><a href="/groups/<%= group.room_id %>/messages">

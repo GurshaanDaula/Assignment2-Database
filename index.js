@@ -115,7 +115,6 @@ app.get('/signup', (req, res) => {
 });
 
 // User Sign Up Post Route
-// User Sign Up Post Route
 app.post('/signup', (req, res) => {
   const { email, username, password } = req.body;
   
@@ -125,7 +124,6 @@ app.post('/signup', (req, res) => {
       return res.status(500).json({ error: 'Error hashing password' });
     }
 
-    // Ensure email is unique (optional, but recommended)
     db.query('SELECT * FROM user WHERE email = ?', [email], (err, result) => {
       if (err) {
         console.error('Error checking if email exists:', err);  // Log if there is an error checking email
@@ -231,18 +229,15 @@ app.post('/join-chat/:room_id', (req, res) => {
     }
 
     if (result.length === 0) {
-      // If the user is not in the room, insert them and set last_read_message_id to NULL
-      // Change the INSERT statement to use a default value like 0
 db.query(`
   INSERT INTO room_user (room_id, user_id, last_read_message_id)
   VALUES (?, ?, ?)
-`, [room_id, user_id, 0], (err, result) => {  // Insert 0 instead of NULL
+`, [room_id, user_id, 0], (err, result) => {  
   if (err) {
     console.log('Error inserting into room_user:', err);
     return res.status(500).json({ error: 'Database error' });
   }
 
-  // After joining, redirect the user to the chat page
   res.redirect(`/chat/${room_id}`);
 });
 
@@ -262,7 +257,6 @@ app.post('/send-message/:room_id', (req, res) => {
     return res.status(403).json({ error: 'You need to be logged in to send a message' });
   }
 
-  // Get room_user_id by matching room_id and user_id
   db.query(`
     SELECT room_user_id FROM room_user WHERE room_id = ? AND user_id = ?
   `, [room_id, user_id], (err, result) => {
@@ -294,32 +288,16 @@ app.post('/send-message/:room_id', (req, res) => {
 });
 
 
-// Chatrooms Page - Shows all rooms the user is part of
-app.get('/chatrooms', (req, res) => {
-  // Make sure you have a valid user session
-  const user_id = req.session.user_id;
-
-  // If the user is not logged in, redirect to login page
-  if (!user_id) {
-    return res.redirect('/login');
-  }
-
-  // Query to get rooms the user is part of
-  db.query('SELECT r.room_id, r.name FROM room r JOIN room_user ru ON r.room_id = ru.room_id WHERE ru.user_id = ?', [user_id], (err, rooms) => {
+app.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
     if (err) {
-      console.log('Error fetching rooms:', err);
-      return res.status(500).send('Database error');
+      return res.status(500).json({ error: 'Could not log out' });
     }
-
-    // Check if rooms are retrieved and pass to the template
-    res.render('chatroom', {
-      rooms: rooms,  // Passing the rooms data to the template
-      username: req.session.username,  // Passing the username to the template
-    });
+    res.redirect('/login');  
   });
 });
 
-// Server Setup
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

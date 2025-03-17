@@ -5,26 +5,22 @@ const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
 const app = express();
 
-// Load environment variables from .env file
-dotenv.config();
-
-// Create the connection to the database using freeDB details
-const db = mysql.createConnection({
-  host: process.env.DB_HOST,        // freeDB host
-  user: process.env.DB_USER,        // freeDB username
-  password: process.env.DB_PASSWORD, // freeDB password
-  database: process.env.DB_NAME      // your database name
+const connection = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
+  ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: true } : false
 });
 
-// Check the connection
-db.connect((err) => {
+connection.connect(err => {
   if (err) {
-    console.error('Error connecting to the database:', err);
+    console.error('Error connecting to the database:', err.stack);
     return;
   }
-  console.log('Connected to the database!');
+  console.log('Connected to the database.');
 });
-
 
 // Middleware setup
 app.use(express.json());
